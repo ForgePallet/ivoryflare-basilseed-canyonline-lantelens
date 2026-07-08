@@ -1761,6 +1761,7 @@ jobs:
       id-token: write
     needs:
       - x_kd6dfaczdffhw5gs
+      - x_szberxktrtspvwua
       - x_pqykrr64x63466wz
     steps:
       - id: setup
